@@ -14,7 +14,7 @@ import javax.tools.Diagnostic;
 import deors.demos.annotations.base.Complexity;
 
 @SupportedAnnotationTypes("deors.demos.annotations.base.Complexity")
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ComplexityProcessor
     extends AbstractProcessor {
 
