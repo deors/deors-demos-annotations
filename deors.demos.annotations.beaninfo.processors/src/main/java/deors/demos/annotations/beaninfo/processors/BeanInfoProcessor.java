@@ -20,7 +20,7 @@ import javax.tools.JavaFileObject;
 import deors.demos.annotations.beaninfo.BeanInfo;
 
 @SupportedAnnotationTypes("deors.demos.annotations.beaninfo.BeanInfo")
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class BeanInfoProcessor
     extends AbstractProcessor {
 
