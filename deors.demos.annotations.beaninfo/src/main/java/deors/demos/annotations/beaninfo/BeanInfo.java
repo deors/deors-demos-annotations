@@ -11,8 +11,13 @@ import java.lang.annotation.Target;
     ElementType.TYPE,
     ElementType.METHOD,
     ElementType.CONSTRUCTOR,
-    ElementType.FIELD})
+    ElementType.FIELD,
+    ElementType.PARAMETER})
 @Retention(RetentionPolicy.SOURCE)
 public @interface BeanInfo {
 
+    String description() default "";
+    boolean expert() default false;
+    boolean hidden() default false;
+    boolean preferred() default false;
 }

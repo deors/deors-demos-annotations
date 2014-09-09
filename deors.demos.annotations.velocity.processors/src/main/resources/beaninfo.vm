@@ -1,21 +1,22 @@
-package ${packageName};
+package ${model.packageName};
 
+import java.beans.BeanDescriptor;
+import java.beans.IntrospectionException;
 import java.beans.MethodDescriptor;
 import java.beans.ParameterDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
-public class ${className}BeanInfo
-    extends java.beans.SimpleBeanInfo {
+public class ${model.beanInfoClassName} extends java.beans.SimpleBeanInfo {
 
     /**
      * Gets the bean class object.
      *
      * @return the bean class
      */
-    public static Class getBeanClass() {
+    public static Class<?> getBeanClass() {
 
-        return ${packageName}.${className}.class;
+        return ${model.qualifiedName}.class;
     }
 
     /**
@@ -25,96 +26,131 @@ public class ${className}BeanInfo
      */
     public static String getBeanClassName() {
 
-        return "${packageName}.${className}";
+        return "${model.qualifiedName}";
     }
 
     /**
-     * Finds the right method by comparing name & number of parameters in the class
-     * method list.
+     * Returns the ${model.qualifiedName} bean descriptor.
      *
-     * @param classObject the class object
-     * @param methodName the method name
-     * @param parameterCount the number of parameters
-     *
-     * @return the method if found, <code>null</code> otherwise
+     * @return the bean descriptor
      */
-    public static Method findMethod(Class classObject, String methodName, int parameterCount) {
+    public BeanDescriptor getBeanDescriptor() {
 
-        try {
-            // since this method attempts to find a method by getting all
-            // methods from the class, this method should only be called if
-            // getMethod cannot find the method
-            Method[] methods = classObject.getMethods();
-            for (Method method : methods) {
-                if (method.getParameterTypes().length == parameterCount
-                    && method.getName().equals(methodName)) {
-                    return method;
-                }
-            }
-        } catch (Throwable t) {
-            return null;
-        }
-        return null;
+        BeanDescriptor descriptor = new BeanDescriptor(getBeanClass());
+
+        descriptor.setName("${model.className}");
+        descriptor.setDisplayName("${model.className}");
+        descriptor.setShortDescription("${model.description}");
+        descriptor.setExpert(${model.expert});
+        descriptor.setHidden(${model.hidden});
+        descriptor.setPreferred(${model.preferred});
+
+        return descriptor;
     }
-#foreach($field in $fields)
 
     /**
-     * Returns the ${field.simpleName} property descriptor.
+     * Returns the list of property descriptors for the ${model.qualifiedName} bean.
+     *
+     * @return the list of property descriptors
+     */
+    public PropertyDescriptor[] getPropertyDescriptors() {
+
+        return new PropertyDescriptor[] {
+#foreach($property in $properties)
+            get${display.capitalize(${property.name})}PropertyDescriptor()#if(${velocityHasNext}),#end
+
+#end
+        };
+    }
+
+    /**
+     * Returns the list of method descriptors for the ${model.qualifiedName} bean.
+     *
+     * @return the list of method descriptors
+     */
+    public MethodDescriptor[] getMethodDescriptors() {
+
+        return new MethodDescriptor[] {
+#foreach($method in $methods)
+            get${display.capitalize(${method.name})}MethodDescriptor()#if(${velocityHasNext}),#end
+
+#end
+        };
+    }
+#foreach($property in $properties)
+
+    /**
+     * Returns the ${property.name} property descriptor.
      *
      * @return the property descriptor
      */
-    public PropertyDescriptor ${field.simpleName}PropertyDescriptor() {
+    public PropertyDescriptor get${display.capitalize(${property.name})}PropertyDescriptor() {
 
-        PropertyDescriptor theDescriptor = null;
-        return theDescriptor;
+        // create a property descriptor with usual names for getter and setter
+        try {
+            PropertyDescriptor descriptor = new PropertyDescriptor("${property.name}", getBeanClass());
+
+            descriptor.setBound(true);
+            descriptor.setName("${property.name}");
+            descriptor.setDisplayName("${property.name}");
+            descriptor.setShortDescription("${property.description}");
+            descriptor.setExpert(${property.expert});
+            descriptor.setHidden(${property.hidden});
+            descriptor.setPreferred(${property.preferred});
+
+            return descriptor;
+
+        } catch (IntrospectionException e) {
+            return null;
+        }
     }
 #end
 #foreach($method in $methods)
 
     /**
-     * Returns the ${method.simpleName}() method descriptor.
+     * Returns the ${method.name}() method descriptor.
      *
      * @return the method descriptor
      */
-    public MethodDescriptor ${method.simpleName}MethodDescriptor() {
+    public MethodDescriptor get${display.capitalize(${method.name})}MethodDescriptor() {
 
-        MethodDescriptor descriptor = null;
-
-        Method method = null;
         try {
             // finds the method using getMethod with parameter types
-            // TODO parameterize parameter types
-            Class[] parameterTypes = {java.beans.PropertyChangeListener.class};
-            method = getBeanClass().getMethod("${method.simpleName}", parameterTypes);
+            Class<?>[] parameterTypes = {#foreach($param in $method.parameters)${param.qualifiedType}.class#if(${velocityHasNext}), #end#end};
+            Method method = getBeanClass().getMethod("${method.name}", parameterTypes);
 
-        } catch (Throwable t) {
-            // alternative: use findMethod
-            // TODO parameterize number of parameters
-            method = findMethod(getBeanClass(), "${method.simpleName}", 1);
+            // creates the method parameter descriptors
+#foreach($param in $method.parameters)
+            ParameterDescriptor parameterDescriptor${velocityCount} = new ParameterDescriptor();
+            parameterDescriptor${velocityCount}.setName("${param.name}");
+            parameterDescriptor${velocityCount}.setDisplayName("${param.name}");
+            parameterDescriptor${velocityCount}.setShortDescription("${param.description}");
+            parameterDescriptor${velocityCount}.setExpert(${param.expert});
+            parameterDescriptor${velocityCount}.setHidden(${param.hidden});
+            parameterDescriptor${velocityCount}.setPreferred(${param.preferred});
+#end
+
+            ParameterDescriptor[] parameterDescriptors = {
+#foreach($param in $method.parameters)
+                parameterDescriptor${velocityCount}#if(${velocityHasNext}),#end
+
+#end
+            };
+
+            MethodDescriptor descriptor = new MethodDescriptor(method, parameterDescriptors);
+
+            descriptor.setName("${method.name}(#foreach($param in $method.parameters)${param.qualifiedType}#if(${velocityHasNext}), #end#end)");
+            descriptor.setDisplayName("${method.name}(#foreach($param in $method.parameters)${param.qualifiedType}#if(${velocityHasNext}), #end#end)");
+            descriptor.setShortDescription("${method.description}");
+            descriptor.setExpert(${method.expert});
+            descriptor.setHidden(${method.hidden});
+            descriptor.setPreferred(${method.preferred});
+
+            return descriptor;
+
+        } catch (NoSuchMethodException | SecurityException e) {
+            return null;
         }
-
-        try {
-            // creates the method descriptor with parameter descriptors
-            // TODO parameterize parameter descriptors
-            ParameterDescriptor parameterDescriptor1 = new ParameterDescriptor();
-            parameterDescriptor1.setName("listener");
-            parameterDescriptor1.setDisplayName("listener");
-            ParameterDescriptor[] parameterDescriptors = {parameterDescriptor1};
-            descriptor = new MethodDescriptor(method, parameterDescriptors);
-
-        } catch (Throwable t) {
-            // alternative: create a plain method descriptor
-            descriptor = new MethodDescriptor(method);
-        }
-
-        // TODO parameterize descriptor properties
-        descriptor.setDisplayName("${method.simpleName}(java.beans.PropertyChangeListener)");
-        descriptor.setShortDescription("Adds a property change listener.");
-        descriptor.setExpert(false);
-        descriptor.setHidden(false);
-        descriptor.setValue("preferred", false);
-
-        return descriptor;
     }
 #end
 }
