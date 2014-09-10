@@ -13,16 +13,29 @@ import javax.tools.Diagnostic;
 
 import deors.demos.annotations.base.Complexity;
 
+/**
+ * Annotation processor for Complexity annotation type.
+ *
+ * @author deors
+ * @version 1.0
+ */
 @SupportedAnnotationTypes("deors.demos.annotations.base.Complexity")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ComplexityProcessor
     extends AbstractProcessor {
 
+    /**
+     * Default constructor.
+     */
     public ComplexityProcessor() {
 
         super();
     }
 
+    /**
+     * Reads the complexity value contained in the annotation and prints it in the console
+     * (NOTE level).
+     */
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
