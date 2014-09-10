@@ -10,19 +10,19 @@ public class BeanInfoPropertyModel {
 
     /** Property name. */
     String name;
-    
+
     /** Property qualified type. */
     String qualifiedType;
-    
+
     /** Property description. */
     String description;
-    
+
     /** Whether the property is an expert feature. */
     boolean expert;
 
     /** Whether the property should be hidden in menus of visual editors. */
     boolean hidden;
-    
+
     /** Whether the property should be prioritized in menus of visual editors. */
     boolean preferred;
 

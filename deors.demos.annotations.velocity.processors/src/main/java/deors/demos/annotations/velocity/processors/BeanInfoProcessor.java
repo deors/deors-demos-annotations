@@ -45,6 +45,9 @@ import deors.demos.annotations.beaninfo.BeanInfo;
 public class BeanInfoProcessor
     extends AbstractProcessor {
 
+    /** String used to append to a class name when creating the BeanInfo class name. */
+    private static final String BEAN_INFO = "BeanInfo";
+
     /**
      * Default constructor.
      */
@@ -87,8 +90,8 @@ public class BeanInfoProcessor
                     model.packageName = packageElement.getQualifiedName().toString();
                     model.className = classElement.getSimpleName().toString();
                     model.qualifiedName = classElement.getQualifiedName().toString();
-                    model.beanInfoClassName = model.className + "BeanInfo";
-                    model.beanInfoQualifiedName = model.qualifiedName + "BeanInfo";
+                    model.beanInfoClassName = model.className + BEAN_INFO;
+                    model.beanInfoQualifiedName = model.qualifiedName + BEAN_INFO;
                     model.description = annotation.description();
 
                     processingEnv.getMessager().printMessage(
@@ -113,7 +116,7 @@ public class BeanInfoProcessor
 
                     processingEnv.getMessager().printMessage(
                         Diagnostic.Kind.NOTE,
-                        "annotated field: " + property.name + " // type: " + property.qualifiedType, e);
+                        "annotated field: " + property.name + " // field type: " + property.qualifiedType, e);
 
                 } else if (e.getKind() == ElementKind.METHOD) {
 
@@ -154,7 +157,7 @@ public class BeanInfoProcessor
                     for (BeanInfoPropertyModel parameter : parameters) {
                         processingEnv.getMessager().printMessage(
                             Diagnostic.Kind.NOTE,
-                            "parameter: " + parameter.name + " // type: " + parameter.qualifiedType, e);
+                            "parameter: " + parameter.name + " // parameter type: " + parameter.qualifiedType, e);
                     }
                 }
             }
