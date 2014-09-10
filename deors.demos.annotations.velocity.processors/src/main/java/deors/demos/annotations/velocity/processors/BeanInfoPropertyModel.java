@@ -27,6 +27,13 @@ public class BeanInfoPropertyModel {
     boolean preferred;
 
     /**
+     * Default constructor.
+     */
+    public BeanInfoPropertyModel() {
+        super();
+    }
+
+    /**
      * Getter for name property.
      *
      * @return the property value.

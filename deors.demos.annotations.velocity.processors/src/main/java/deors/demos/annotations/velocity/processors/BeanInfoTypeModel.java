@@ -36,6 +36,13 @@ public class BeanInfoTypeModel {
     boolean preferred;
 
     /**
+     * Default constructor.
+     */
+    public BeanInfoTypeModel() {
+        super();
+    }
+
+    /**
      * Getter for packageName property.
      *
      * @return the property value.

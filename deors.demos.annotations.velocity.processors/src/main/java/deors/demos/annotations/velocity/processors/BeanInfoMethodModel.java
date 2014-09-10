@@ -32,6 +32,13 @@ public class BeanInfoMethodModel {
     boolean preferred;
 
     /**
+     * Default constructor.
+     */
+    public BeanInfoMethodModel() {
+        super();
+    }
+
+    /**
      * Getter for name property.
      *
      * @return the property value.
