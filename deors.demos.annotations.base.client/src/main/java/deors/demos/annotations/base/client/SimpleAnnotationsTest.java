@@ -5,6 +5,12 @@ import deors.demos.annotations.base.Complexity;
 import deors.demos.annotations.base.ComplexityLevel;
 import deors.demos.annotations.base.WorkProduct;
 
+/**
+ * A simple class using Author, Complexity and WorkProduct annotations.
+ *
+ * @author deors
+ * @version 1.0
+ */
 @Author(name = "Albert",
         created = "17/09/2010",
         revision = 3,
@@ -14,6 +20,9 @@ import deors.demos.annotations.base.WorkProduct;
 @Complexity(ComplexityLevel.VERY_SIMPLE)
 public class SimpleAnnotationsTest {
 
+    /**
+     * Default constructor.
+     */
     @Author(name = "Albert",
             created = "17/09/2010") // this annotation types applies also to constructors
                                     // default values assumed for revision and reviewers
@@ -22,6 +31,9 @@ public class SimpleAnnotationsTest {
         super();
     }
 
+    /**
+     * Some method.
+     */
     @Complexity() // this annotation type applies also to methods
                   // the default value 'ComplexityLevel.MEDIUM' is assumed
     public void theMethod() {
