@@ -35,6 +35,11 @@ public class ComplexityProcessor
     /**
      * Reads the complexity value contained in the annotation and prints it in the console
      * (NOTE level).
+     *
+     * @param annotations set of annotations found
+     * @param roundEnv the environment for this processor round
+     *
+     * @return whether a new processor round would be needed
      */
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

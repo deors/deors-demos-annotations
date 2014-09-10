@@ -19,16 +19,35 @@ import javax.tools.JavaFileObject;
 
 import deors.demos.annotations.beaninfo.BeanInfo;
 
+/**
+ * Annotation processor for BeanInfo annotation type. It generates a simple skeleton
+ * of a BeanInfo type by directly writing to the file output stream.
+ *
+ * @author deors
+ * @version 1.0
+ */
 @SupportedAnnotationTypes("deors.demos.annotations.beaninfo.BeanInfo")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class BeanInfoProcessor
     extends AbstractProcessor {
 
+    /**
+     * Default constructor.
+     */
     public BeanInfoProcessor() {
 
         super();
     }
 
+    /**
+     * Reads the BeanInfo information and writes a simple skeleton for the
+     * BeanInfo class by directly writing to the file output stream.
+     *
+     * @param annotations set of annotations found
+     * @param roundEnv the environment for this processor round
+     *
+     * @return whether a new processor round would be needed
+     */
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
