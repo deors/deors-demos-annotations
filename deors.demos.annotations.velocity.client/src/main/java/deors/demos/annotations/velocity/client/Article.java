@@ -67,9 +67,9 @@ public class Article {
     }
 
     /**
-     * Setter for id property.
+     * Setter for department property.
      *
-     * @param id the new property value
+     * @param department the new property value
      */
     public void setDepartment(int department) {
         this.department = department;
