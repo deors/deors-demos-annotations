@@ -122,7 +122,7 @@ public class BeanInfoProcessor
         } catch (IOException ioe) {
             processingEnv.getMessager().printMessage(
                 Diagnostic.Kind.ERROR,
-                "i/o error: " + ioe.getLocalizedMessage());
+                "i/o error writing the BeanInfo class: " + ioe.getLocalizedMessage());
         } finally {
             if (bw != null) {
                 try {
@@ -130,7 +130,7 @@ public class BeanInfoProcessor
                 } catch (IOException ioe) {
                     processingEnv.getMessager().printMessage(
                         Diagnostic.Kind.ERROR,
-                        "i/o error: " + ioe.getLocalizedMessage());
+                        "i/o error closing an opened file: " + ioe.getLocalizedMessage());
                 }
             }
         }
