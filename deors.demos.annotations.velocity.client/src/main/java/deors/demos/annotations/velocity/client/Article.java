@@ -11,11 +11,20 @@ import deors.demos.annotations.beaninfo.BeanInfo;
 @BeanInfo(description = "This JavaBean represents an Article in the On-line Store application")
 public class Article {
 
-    /** The unique identifier for this Article in the catalogue. */
-    @BeanInfo(description = "The unique identifier for this Article in the catalogue")
+    /** Active status string. */
+    private static final String ACTIVE = "active";
+
+    /** Inactive status string. */
+    private static final String INACTIVE = "inactive";
+
+    /** Invalid status string. */
+    private static final String INVALID = "invalid";
+
+    /** The unique identifier for this Article in the catalog. */
+    @BeanInfo(description = "The unique identifier for this Article in the catalog")
     private String id;
 
-    /** The unique identifier for this Article in the catalogue. */
+    /** The department number where this Article belongs to. */
     @BeanInfo(description = "The department number where this Article belongs to")
     private int department;
 
@@ -89,7 +98,7 @@ public class Article {
      */
     @BeanInfo
     public void activate() {
-        setStatus("active");
+        setStatus(ACTIVE);
     }
 
     /**
@@ -97,7 +106,7 @@ public class Article {
      */
     @BeanInfo
     public void deactivate() {
-        setStatus("inactive");
+        setStatus(INACTIVE);
     }
 
     /**
@@ -108,7 +117,7 @@ public class Article {
     @BeanInfo(description = "Action to invalidate the Article, given the cause")
     public void invalidate(
         @BeanInfo(description = "The cause why the Article is invalidated") String cause) {
-        setStatus("invalid: " + cause);
+        setStatus(INVALID + ": " + cause);
     }
 
     /**
@@ -118,7 +127,7 @@ public class Article {
      */
     @BeanInfo
     public boolean isActive() {
-        return "active".equals(status);
+        return ACTIVE.equals(status);
     }
 
     /**
@@ -128,7 +137,7 @@ public class Article {
      */
     @BeanInfo
     public boolean isInactive() {
-        return "inactive".equals(status);
+        return INACTIVE.equals(status);
     }
 
     /**
@@ -138,6 +147,6 @@ public class Article {
      */
     @BeanInfo
     public boolean isInvalid() {
-        return status != null && status.startsWith("invalid");
+        return status != null && status.startsWith(INVALID);
     }
 }
