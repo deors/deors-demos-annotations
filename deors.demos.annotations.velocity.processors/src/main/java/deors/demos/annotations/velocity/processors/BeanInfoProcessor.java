@@ -33,16 +33,35 @@ import org.apache.velocity.tools.generic.DisplayTool;
 
 import deors.demos.annotations.beaninfo.BeanInfo;
 
+/**
+ * Annotation processor for BeanInfo annotation type. It generates a full featured
+ * BeanInfo type with the help of an Apache Velocity template.
+ *
+ * @author deors
+ * @version 1.0
+ */
 @SupportedAnnotationTypes("deors.demos.annotations.beaninfo.BeanInfo")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class BeanInfoProcessor
     extends AbstractProcessor {
 
+    /**
+     * Default constructor.
+     */
     public BeanInfoProcessor() {
 
         super();
     }
 
+    /**
+     * Reads the BeanInfo information and writes a full featured
+     * BeanInfo type with the help of an Apache Velocity template.
+     *
+     * @param annotations set of annotations found
+     * @param roundEnv the environment for this processor round
+     *
+     * @return whether a new processor round would be needed
+     */
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
@@ -51,7 +70,7 @@ public class BeanInfoProcessor
         }
 
         try {
-            BeanInfoModel model = null;
+            BeanInfoTypeModel model = null;
             Map<String, BeanInfoPropertyModel> properties = new HashMap<>();
             Map<String, BeanInfoMethodModel> methods = new HashMap<>();
 
@@ -59,7 +78,7 @@ public class BeanInfoProcessor
 
                 if (e.getKind() == ElementKind.CLASS) {
 
-                    model = new BeanInfoModel();
+                    model = new BeanInfoTypeModel();
 
                     TypeElement classElement = (TypeElement) e;
                     PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
