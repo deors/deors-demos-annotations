@@ -18,61 +18,105 @@ deors.demos.annotations.beaninfo.client - a 'client' project making use of BeanI
 
 deors.demos.annotations.beaninfo.processors - annotation processors which generate BeanInfo classes based on annotated metadata
 
+deors.demos.annotations.velocity - annotation types related to BeanInfo metadata for the Apache Velocity processor
+
 deors.demos.annotations.velocity.client - a 'client' project making use of BeanInfo annotation types, to be used with the Apache Velocity processor
 
 deors.demos.annotations.velocity.processors - annotation processors which generate BeanInfo classes but using Apache Velocity as a template engine
+
+deors.demos.annotations.entity - annotation types related to GenerateEntity example
+
+deors.demos.annotations.entity.client - a 'client' project making use of GenerateEntity annotation types
+
+deors.demos.annotations.entity.processors - annotation processors which generate Entity classes from annotated interfaces
 
 
 Instructions
 ------------
 
-1) Install the artifact deors.demos.annotations.base:
+A) Base annotations example
+
+A1) Install the artifact deors.demos.annotations.base:
 
     cd /<PROJECT_HOME>/deors.demos.annotation.base
     mvn clean install
 
-2) Install the artifact deors.demos.annotations.base.processors:
+A2) Install the artifact deors.demos.annotations.base.processors:
 
     cd /<PROJECT_HOME>/deors.demos.annotation.base.processors
     mvn clean install
 
-3) Compile or test the artifact deors.demos.annotations.base.client:
+A3) Compile or test the artifact deors.demos.annotations.base.client:
 
     cd /<PROJECT_HOME>/deors.demos.annotation.base.client
     mvn clean test
 
-4) Alternatively, use directly the Java Compiler javac with the provided batch file:
+A4) Alternatively, use directly the Java Compiler javac with the provided batch file:
 
     build-with-javac.bat
 
-5) Same for BeanInfo annotation, install the artifact deors.demos.annotations.beaninfo:
+B) BeanInfo generation example
+
+B1) Install the artifact deors.demos.annotations.beaninfo:
 
     cd /<PROJECT_HOME>/deors.demos.annotations.beaninfo
     mvn clean install
 
-6) Install the artifact deors.demos.annotations.beaninfo.processors:
+B2) Install the artifact deors.demos.annotations.beaninfo.processors:
 
     cd /<PROJECT_HOME>/deors.demos.annotations.beaninfo.processors
     mvn clean install
 
-7) Compile or test the artifact deors.demos.annotations.beaninfo.client:
+B3) Compile or test the artifact deors.demos.annotations.beaninfo.client:
 
     cd /<PROJECT_HOME>/deors.demos.annotations.beaninfo.client
     mvn clean test
 
-8) Alternatively, use directly the Java Compiler javac with the provided batch file:
+B4) Alternatively, use directly the Java Compiler javac with the provided batch file:
 
     build-with-javac.bat
 
-9) For the demo using Velocity templates, install the artifact deors.demos.annotations.velocity.processors:
+C) BeanInfo generation example using Apache Velocity templates
+
+C1) Install the artifact deors.demos.annotations.velocity
+
+    cd /<PROJECT_HOME>/deors.demos.annotations.velocity
+    mvn clean install
+
+C2) Install the artifact deors.demos.annotations.velocity.processors:
 
     cd /<PROJECT_HOME>/deors.demos.annotations.velocity.processors
     mvn clean install
 
-10) And finally, compile or test the artifact deors.demos.annotations.velocity.client
+C3) Compile or test the artifact deors.demos.annotations.velocity.client
 
     cd /<PROJECT_HOME>/deors.demos.annotations.velocity.client
     mvn clean test
 
+C4) Alternatively, use directly the Java Compiler javac with the provided batch file:
 
-NOTE: Generated sources can be found on target/generated-sources/annotations.
+    build-with-javac.bat
+
+D) Entity generation example using Apache Velocity templates
+
+D1) Install the artifact deors.demos.annotations.entity
+
+    cd /<PROJECT_HOME>/deors.demos.annotations.entity
+    mvn clean install
+
+D2) Install the artifact deors.demos.annotations.entity.processors:
+
+    cd /<PROJECT_HOME>/deors.demos.annotations.entity.processors
+    mvn clean install
+
+D3) Compile or test the artifact deors.demos.annotations.entity.client
+
+    cd /<PROJECT_HOME>/deors.demos.annotations.entity.client
+    mvn clean test
+
+D4) Alternatively, use directly the Java Compiler javac with the provided batch file:
+
+    build-with-javac.bat
+
+
+NOTE: Generated sources can be found on each client module in folder target/generated-sources/annotations.
