@@ -1,0 +1,31 @@
+package $packageName;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "$entityName.toUpperCase()")
+public class $implName implements $entityName {
+
+#foreach($field in $fieldNames)
+    private $fieldTypes.get($field) $field;
+#end
+#foreach($field in $fieldNames)
+
+#if($fieldId.get($field) == true)
+    @Id
+#end
+    @Column(name = "$field.toUpperCase()")
+    public $fieldTypes.get($field) get${display.capitalize($field)}() {
+        return $field;
+    }
+#end
+#foreach($field in $fieldNames)
+
+    public void set${display.capitalize($field)}($fieldTypes.get($field) $field) {
+        this.$field = $field;
+    }
+#end
+}

@@ -5,9 +5,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>deors.demos.annotations.velocity.processors</name>
+    <name>deors.demos.annotations.entity.processors</name>
     <groupId>deors.demos</groupId>
-    <artifactId>deors.demos.annotations.velocity.processors</artifactId>
+    <artifactId>deors.demos.annotations.entity.processors</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -33,7 +33,7 @@
     <dependencies>
         <dependency>
             <groupId>deors.demos</groupId>
-            <artifactId>deors.demos.annotations.velocity</artifactId>
+            <artifactId>deors.demos.annotations.entity</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

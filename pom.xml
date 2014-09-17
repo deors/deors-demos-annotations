@@ -18,6 +18,10 @@
         <module>deors.demos.annotations.beaninfo</module>
         <module>deors.demos.annotations.beaninfo.processors</module>
         <module>deors.demos.annotations.beaninfo.client</module>
+        <module>deors.demos.annotations.entity</module>
+        <module>deors.demos.annotations.entity.processors</module>
+        <module>deors.demos.annotations.entity.client</module>
+        <module>deors.demos.annotations.velocity</module>
         <module>deors.demos.annotations.velocity.processors</module>
         <module>deors.demos.annotations.velocity.client</module>
     </modules>

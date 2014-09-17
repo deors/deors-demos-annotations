@@ -1,6 +1,6 @@
 package deors.demos.annotations.velocity.client;
 
-import deors.demos.annotations.beaninfo.BeanInfo;
+import deors.demos.annotations.velocity.BeanInfo;
 
 /**
  * This JavaBean represents an Article in the On-line Store application.

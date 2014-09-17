@@ -31,7 +31,7 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.tools.generic.DisplayTool;
 
-import deors.demos.annotations.beaninfo.BeanInfo;
+import deors.demos.annotations.velocity.BeanInfo;
 
 /**
  * Annotation processor for BeanInfo annotation type. It generates a full featured
