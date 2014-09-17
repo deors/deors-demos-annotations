@@ -60,13 +60,13 @@ public class GenerateEntityProcessor
     private String qualifiedName = "";
 
     /** The field list. */
-    private List<String> fieldNames = new ArrayList<>();
+    private final List<String> fieldNames = new ArrayList<>();
 
     /** Map containing each field type. */
-    private Map<String, String> fieldTypes = new HashMap<>();
+    private final Map<String, String> fieldTypes = new HashMap<>();
 
     /** Map containing whether a field is part of the entity key. */
-    private Map<String, Boolean> fieldId = new HashMap<>();
+    private final Map<String, Boolean> fieldId = new HashMap<>();
 
     /**
      * Default constructor.
@@ -99,7 +99,7 @@ public class GenerateEntityProcessor
             }
 
             TypeElement interfaceElement = (TypeElement) e;
-            prepareEntityData(interfaceElement);
+            setEntityTypeInfo(interfaceElement);
 
             for (Element interfaceMember : interfaceElement.getEnclosedElements()) {
 
@@ -108,8 +108,10 @@ public class GenerateEntityProcessor
                 }
 
                 ExecutableElement methodElement = (ExecutableElement) interfaceMember;
-                prepareEntityType(methodElement);
+                setEntityFieldInfo(methodElement);
             }
+
+            cleanData();
         }
 
         if (!entityName.isEmpty()) {
@@ -120,12 +122,12 @@ public class GenerateEntityProcessor
     }
 
     /**
-     * Prepares Entity data from the information available in the
+     * Sets the Entity type information from the information available in the
      * interface and annotation.
      *
      * @param interfaceElement element describing the interface
      */
-    private void prepareEntityData(TypeElement interfaceElement) {
+    private void setEntityTypeInfo(TypeElement interfaceElement) {
 
         PackageElement packageElement = (PackageElement) interfaceElement.getEnclosingElement();
 
@@ -140,48 +142,86 @@ public class GenerateEntityProcessor
     }
 
     /**
-     * Prepares Entity type from the information of methods in the
+     * Sets the Entity field information from the information of methods in the
      * interface and annotations.
      *
      * @param methodElement element describing the method
      */
-    private void prepareEntityType(ExecutableElement methodElement) {
+    private void setEntityFieldInfo(ExecutableElement methodElement) {
 
-        GenerateEntity annotation = methodElement.getAnnotation(GenerateEntity.class);
-
-        String fieldName = "";
-        String methodName = methodElement.getSimpleName().toString();
-        if (methodName.startsWith("get")
-            || methodName.startsWith("set")) {
-            fieldName = methodName.substring(3).toLowerCase();
-        } else if (methodName.startsWith("is")) {
-            fieldName = methodName.substring(2).toLowerCase();
-        } else {
-            return;
-        }
-
-        String fieldType = "";
-        // if getter we know the field type is the return type
-        // if not, look for first parameter
-        if (methodElement.getReturnType().equals(void.class)) {
-            if (methodElement.getParameters().isEmpty()) {
-                return;
-            }
-            fieldType = methodElement.getParameters().get(0).asType().toString();
-        } else {
-            fieldType = methodElement.getReturnType().toString();
-        }
-
-        boolean id = false;
-        if (annotation != null) {
-            id = annotation.id();
-        }
+        String fieldName = getFieldName(methodElement);
+        String fieldType = getFieldType(methodElement);
+        boolean id = getFieldId(methodElement);
 
         if (!fieldNames.contains(fieldName)) {
             fieldNames.add(fieldName);
             fieldTypes.put(fieldName, fieldType);
             fieldId.put(fieldName, id);
         }
+    }
+
+    /**
+     * Obtains the field name deriving it from the method name.
+     *
+     * @param methodElement element describing the method
+     *
+     * @return the field name or a blank string if the field name could not be determined
+     */
+    private String getFieldName(ExecutableElement methodElement) {
+
+        final String get = "get";
+        final String set = "set";
+        final String is = "is";
+
+        String fieldName = "";
+        String methodName = methodElement.getSimpleName().toString();
+        if (methodName.startsWith(get)
+            || methodName.startsWith(set)) {
+            fieldName = methodName.substring(get.length()).toLowerCase();
+        } else if (methodName.startsWith(is)) {
+            fieldName = methodName.substring(is.length()).toLowerCase();
+        }
+        return fieldName;
+    }
+
+    /**
+     * Obtains the field type deriving it from the method return type
+     * or the type of the first parameter.
+     *
+     * @param methodElement element describing the method
+     *
+     * @return the field type or a blank string if the field type could not be determined
+     */
+    private String getFieldType(ExecutableElement methodElement) {
+
+        String fieldType = "";
+        // if getter the field type is the return type
+        // if not, look for first parameter
+        if (methodElement.getReturnType().equals(void.class)
+            && !methodElement.getParameters().isEmpty()) {
+            fieldType = methodElement.getParameters().get(0).asType().toString();
+        } else {
+            fieldType = methodElement.getReturnType().toString();
+        }
+        return fieldType;
+    }
+
+    /**
+     * Obtains the field id flag depending on the presence of a GenerateEntity annotation
+     * with the id field explicitly set to true.
+     *
+     * @param methodElement element describing the method
+     *
+     * @return the field id flag
+     */
+    private boolean getFieldId(ExecutableElement methodElement) {
+
+        boolean id = false;
+        GenerateEntity annotation = methodElement.getAnnotation(GenerateEntity.class);
+        if (annotation != null) {
+            id = annotation.id();
+        }
+        return id;
     }
 
     /**
@@ -244,5 +284,19 @@ public class GenerateEntityProcessor
                 Diagnostic.Kind.ERROR,
                 e.getLocalizedMessage());
         }
+    }
+
+    /**
+     * Cleans data in preparation of an eventual new annotated interface.
+     */
+    private void cleanData() {
+
+        packageName = "";
+        entityName = "";
+        implName = "";
+        qualifiedName = "";
+        fieldNames.clear();
+        fieldTypes.clear();
+        fieldId.clear();
     }
 }
