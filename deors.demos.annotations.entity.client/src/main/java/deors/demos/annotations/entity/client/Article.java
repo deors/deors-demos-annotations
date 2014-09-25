@@ -11,46 +11,13 @@ import deors.demos.annotations.entity.GenerateEntity;
 @GenerateEntity
 public interface Article {
 
-    /**
-     * Getter for id property.
-     *
-     * @return the property value
-     */
     @GenerateEntity(id = true)
     public String getId();
-
-    /**
-     * Setter for id property.
-     *
-     * @param id the new property value
-     */
     public void setId(String id);
 
-    /**
-     * Getter for department property.
-     *
-     * @return the property value
-     */
     public int getDepartment();
-
-    /**
-     * Setter for department property.
-     *
-     * @param department the new property value
-     */
     public void setDepartment(int department);
 
-    /**
-     * Getter for status property.
-     *
-     * @return the property value
-     */
     public String getStatus();
-
-    /**
-     * Setter for status property.
-     *
-     * @param status the new property value
-     */
     public void setStatus(String status);
 }
