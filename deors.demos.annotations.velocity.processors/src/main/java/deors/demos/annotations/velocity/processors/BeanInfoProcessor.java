@@ -40,7 +40,7 @@ import deors.demos.annotations.velocity.BeanInfo;
  * @author deors
  * @version 1.0
  */
-@SupportedAnnotationTypes("deors.demos.annotations.beaninfo.BeanInfo")
+@SupportedAnnotationTypes("deors.demos.annotations.velocity.BeanInfo")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class BeanInfoProcessor
     extends AbstractProcessor {
