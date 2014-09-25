@@ -92,31 +92,41 @@ public class GenerateEntityProcessor
             return true;
         }
 
-        for (Element e : roundEnv.getElementsAnnotatedWith(GenerateEntity.class)) {
-
-            if (e.getKind() != ElementKind.INTERFACE) {
-                continue;
-            }
-
-            TypeElement interfaceElement = (TypeElement) e;
-            setEntityTypeInfo(interfaceElement);
-
-            for (Element interfaceMember : interfaceElement.getEnclosedElements()) {
-
-                if (!(interfaceMember instanceof ExecutableElement)) {
-                    continue;
-                }
-
-                ExecutableElement methodElement = (ExecutableElement) interfaceMember;
-                setEntityFieldInfo(methodElement);
-            }
-
-            generateEntityClass();
-
-            cleanData();
+        for (Element element : roundEnv.getElementsAnnotatedWith(GenerateEntity.class)) {
+            processElement(element);
         }
 
         return true;
+    }
+
+    /**
+     * Process an element annotated by the handled Annotation Type.
+     *
+     * @param element the annotated element to be processed
+     */
+    private void processElement(Element element) {
+
+        if (element.getKind() != ElementKind.INTERFACE) {
+            return;
+        }
+
+        TypeElement interfaceElement = (TypeElement) element;
+        setEntityTypeInfo(interfaceElement);
+
+        for (Element interfaceMember : interfaceElement.getEnclosedElements()) {
+
+            if (!(interfaceMember instanceof ExecutableElement)) {
+                continue;
+            }
+
+            ExecutableElement methodElement = (ExecutableElement) interfaceMember;
+            setEntityFieldInfo(methodElement);
+        }
+
+        generateEntityClass();
+
+        cleanData();
+
     }
 
     /**
@@ -155,6 +165,10 @@ public class GenerateEntityProcessor
             fieldNames.add(fieldName);
             fieldTypes.put(fieldName, fieldType);
             fieldId.put(fieldName, id);
+
+            processingEnv.getMessager().printMessage(
+                Diagnostic.Kind.NOTE,
+                "  found field: " + fieldName + " // type: " + fieldType, methodElement);
         }
     }
 
