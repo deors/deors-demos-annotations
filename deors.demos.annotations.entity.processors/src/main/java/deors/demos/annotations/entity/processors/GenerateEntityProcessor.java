@@ -111,11 +111,9 @@ public class GenerateEntityProcessor
                 setEntityFieldInfo(methodElement);
             }
 
-            cleanData();
-        }
-
-        if (!entityName.isEmpty()) {
             generateEntityClass();
+
+            cleanData();
         }
 
         return true;
@@ -195,7 +193,7 @@ public class GenerateEntityProcessor
     private String getFieldType(ExecutableElement methodElement) {
 
         String fieldType = "";
-        // if getter the field type is the return type
+        // if getter, the field type is the return type
         // if not, look for first parameter
         if (methodElement.getReturnType().equals(void.class)
             && !methodElement.getParameters().isEmpty()) {
@@ -228,6 +226,10 @@ public class GenerateEntityProcessor
      * Generates the Entity class using Apache Velocity templates.
      */
     private void generateEntityClass() {
+
+        if (entityName.isEmpty()) {
+            return;
+        }
 
         try {
             Properties props = new Properties();
