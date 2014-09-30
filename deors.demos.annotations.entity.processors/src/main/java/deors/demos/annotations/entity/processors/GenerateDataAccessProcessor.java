@@ -68,8 +68,17 @@ public class GenerateDataAccessProcessor
     /** Map containing each query string. */
     private final Map<String, String> queryStrings = new HashMap<>();
 
-    /** Entity name. */
+    /** Entity type name (fully qualified). */
+    private String entityType = "";
+
+    /** Entity name (class name only). */
     private String entityName = "";
+
+    /** Key type name (fully qualified). */
+    private String keyType = "";
+
+    /** Key name (class name only). */
+    private String keyName = "";
 
     /**
      * Default constructor.
@@ -157,14 +166,20 @@ public class GenerateDataAccessProcessor
 
         for (TypeMirror iface : superInterfaces) {
             Scanner s = new Scanner(iface.toString());
-            s.useDelimiter("<|>");
+            s.useDelimiter("<|,|>");
             if (s.hasNext()) {
                 // ignoring interface name
                 s.next();
             }
             if (s.hasNext()) {
-                // entity name is the parameterized type
-                entityName = s.next();
+                // entity name is the first parameterized type
+                entityType = s.next();
+                entityName = entityType.substring(entityType.lastIndexOf('.') + 1);
+            }
+            if (s.hasNext()) {
+                // key type is the second parameterized type
+                keyType = s.next();
+                keyName = keyType.substring(keyType.lastIndexOf('.') + 1);
             }
             s.close();
         }
@@ -196,7 +211,7 @@ public class GenerateDataAccessProcessor
      */
     private void generateDataAccessClass() {
 
-        if (dataAccessName.isEmpty() || entityName.isEmpty()) {
+        if (dataAccessName.isEmpty() || entityType.isEmpty() || keyType.isEmpty()) {
             return;
         }
 
@@ -215,7 +230,10 @@ public class GenerateDataAccessProcessor
             vc.put("implName", implName);
             vc.put("queryNames", queryNames);
             vc.put("queryStrings", queryStrings);
+            vc.put("entityType", entityType);
             vc.put("entityName", entityName);
+            vc.put("keyType", keyType);
+            vc.put("keyName", keyName);
 
             // adding DisplayTool from Velocity Tools library
             vc.put("display", new DisplayTool());
@@ -268,6 +286,6 @@ public class GenerateDataAccessProcessor
         qualifiedName = "";
         queryNames.clear();
         queryStrings.clear();
-        entityName = "";
+        entityType = "";
     }
 }

@@ -1,9 +1,9 @@
 package deors.demos.annotations.entity;
 
-public interface BaseDataAccess<T> {
+public interface BaseDataAccess<T, K> {
 
-    T getById(T id);
+    T selectById(K id);
     T insert(T newRecord);
-    T update(T updateRecord);
-    void delete(T deleteRecord);
+    void update(T updatedRecord);
+    void delete(T deletedRecord);
 }

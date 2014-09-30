@@ -1,35 +1,49 @@
 package $packageName;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import ${entityType};
+#if($keyType.beginsWith("java.lang.") == false)import ${keyType};#end
+
 public class $implName implements $dataAccessName {
 
-    public ${entityName} getById(
-        ${entityName} id) {
-        // TO-DO: add missing implementation
-        return null;
+    @PersistenceContext
+    private EntityManager em;
+
+    public ${entityName} selectById(${keyName} id) {
+
+        return em.find(${entityName}.class, id);
     }
 
-    public ${entityName} insert(
-        ${entityName} newRecord) {
-        // TO-DO: add missing implementation
-        return null;
+    public ${entityName} insert(${entityName} newRecord) {
+
+        em.getTransaction().begin();
+        em.persist(newRecord);
+        em.getTransaction().commit();
+        return newRecord;
     }
 
-    public ${entityName} update(
-        ${entityName} updateRecord) {
-        // TO-DO: add missing implementation
-        return null;
+    public void update(${entityName} updatedRecord) {
+
+        em.getTransaction().begin();
+        em.merge(updatedRecord);
+        em.getTransaction().commit();
     }
 
-    public void delete(
-        ${entityName} deleteRecord) {
-        // TO-DO: add missing implementation
-        return;
+    public void delete(${entityName} deletedRecord) {
+
+        em.getTransaction().begin();
+        em.remove(deletedRecord);
+        em.getTransaction().commit();
     }
 #foreach($query in $queryNames)
 
     // TO-DO: method name and parameters should be obtained from the annotated type
-    public java.util.List<${entityName}> getByCustomCriteria(
-        String criteria1, String criteria2) {
+    public List<${entityName}> getByCustomCriteria(String criteria1, String criteria2) {
+
         // TO-DO: add logic needed to ask persistence engine for query results
         // ${queryStrings.get($query)}
         return null;

@@ -7,7 +7,7 @@ import deors.demos.annotations.entity.GenerateDataAccess;
 
 @GenerateDataAccess
 public interface ArticleDataAccess
-    extends BaseDataAccess<Article> {
+    extends BaseDataAccess<Article, String> {
 
     @GenerateDataAccess("select custom query clauses")
     List<Article> getByCustomCriteria(String criteria1, String criteria2);
