@@ -1,1 +1,2 @@
 deors.demos.annotations.entity.processors.GenerateEntityProcessor
+deors.demos.annotations.entity.processors.GenerateDataAccessProcessor

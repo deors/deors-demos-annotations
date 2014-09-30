@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -20,6 +21,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
@@ -30,18 +32,19 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.tools.generic.DisplayTool;
 
-import deors.demos.annotations.entity.GenerateEntity;
+import deors.demos.annotations.entity.GenerateDataAccess;
 
 /**
- * Annotation processor for GenerateEntity annotation type. It generates a full featured
- * JavaBean from an interface containing only getter and setter declarations.
+ * Annotation processor for GenerateDataAccess annotation type. It generates a
+ * data access object with basic CRUD methods and any custom queries that
+ * may be defined in the annotated interface.
  *
  * @author deors
  * @version 1.0
  */
-@SupportedAnnotationTypes("deors.demos.annotations.entity.GenerateEntity")
+@SupportedAnnotationTypes("deors.demos.annotations.entity.GenerateDataAccess")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class GenerateEntityProcessor
+public class GenerateDataAccessProcessor
     extends AbstractProcessor {
 
     /** String used to append to an entity name when creating the implementation. */
@@ -50,35 +53,35 @@ public class GenerateEntityProcessor
     /** Package name of the class to generate. */
     private String packageName = "";
 
-    /** Entity name. */
-    private String entityName = "";
+    /** Data Access object name. */
+    private String dataAccessName = "";
 
-    /** Name of the Entity implementation class. */
+    /** Name of the Data Access implementation class. */
     private String implName = "";
 
-    /** Qualified name of the Entity implementation class. */
+    /** Qualified name of the Data Access implementation class. */
     private String qualifiedName = "";
 
-    /** The field list. */
-    private final List<String> fieldNames = new ArrayList<>();
+    /** The query method list. */
+    private final List<String> queryNames = new ArrayList<>();
 
-    /** Map containing each field type. */
-    private final Map<String, String> fieldTypes = new HashMap<>();
+    /** Map containing each query string. */
+    private final Map<String, String> queryStrings = new HashMap<>();
 
-    /** Map containing whether a field is part of the entity key. */
-    private final Map<String, Boolean> fieldId = new HashMap<>();
+    /** Entity name. */
+    private String entityName = "";
 
     /**
      * Default constructor.
      */
-    public GenerateEntityProcessor() {
+    public GenerateDataAccessProcessor() {
 
         super();
     }
 
     /**
-     * Reads the entity information and writes a full featured
-     * JavaBean with the help of an Apache Velocity template.
+     * Reads the annotated interface information and writes a full featured
+     * data access object with the help of an Apache Velocity template.
      *
      * @param annotations set of annotations found
      * @param roundEnv the environment for this processor round
@@ -92,7 +95,7 @@ public class GenerateEntityProcessor
             return true;
         }
 
-        for (Element element : roundEnv.getElementsAnnotatedWith(GenerateEntity.class)) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(GenerateDataAccess.class)) {
             processElement(element);
         }
 
@@ -111,7 +114,7 @@ public class GenerateEntityProcessor
         }
 
         TypeElement interfaceElement = (TypeElement) element;
-        setEntityTypeInfo(interfaceElement);
+        setDataAccessTypeInfo(interfaceElement);
 
         for (Element interfaceMember : interfaceElement.getEnclosedElements()) {
 
@@ -120,127 +123,80 @@ public class GenerateEntityProcessor
             }
 
             ExecutableElement methodElement = (ExecutableElement) interfaceMember;
-            setEntityFieldInfo(methodElement);
+            setDataAccessQueryInfo(methodElement);
         }
 
-        generateEntityClass();
+        generateDataAccessClass();
 
         cleanData();
     }
 
     /**
-     * Sets the Entity type information from the information available in the
+     * Sets the Data Access type information from the information available in the
      * interface and annotation.
      *
      * @param interfaceElement element describing the interface
      */
-    private void setEntityTypeInfo(TypeElement interfaceElement) {
+    private void setDataAccessTypeInfo(TypeElement interfaceElement) {
 
         PackageElement packageElement = (PackageElement) interfaceElement.getEnclosingElement();
 
         packageName = packageElement.getQualifiedName().toString();
-        entityName = interfaceElement.getSimpleName().toString();
-        implName = entityName + IMPL;
+        dataAccessName = interfaceElement.getSimpleName().toString();
+        implName = dataAccessName + IMPL;
         qualifiedName = interfaceElement.getQualifiedName().toString() + IMPL;
 
         processingEnv.getMessager().printMessage(
             Diagnostic.Kind.NOTE,
-            "annotated interface: " + entityName, interfaceElement);
+            "annotated interface: " + dataAccessName, interfaceElement);
+
+        List<? extends TypeMirror> superInterfaces = interfaceElement.getInterfaces();
+        if (superInterfaces.isEmpty()) {
+            return;
+        }
+
+        for (TypeMirror iface : superInterfaces) {
+            Scanner s = new Scanner(iface.toString());
+            s.useDelimiter("<|>");
+            if (s.hasNext()) {
+                // ignoring interface name
+                s.next();
+            }
+            if (s.hasNext()) {
+                // entity name is the parameterized type
+                entityName = s.next();
+            }
+            s.close();
+        }
     }
 
     /**
-     * Sets the Entity field information from the information of methods in the
+     * Sets the custom query method information from the information of methods in the
      * interface and annotations.
      *
      * @param methodElement element describing the method
      */
-    private void setEntityFieldInfo(ExecutableElement methodElement) {
+    private void setDataAccessQueryInfo(ExecutableElement methodElement) {
 
-        String fieldName = getFieldName(methodElement);
-        String fieldType = getFieldType(methodElement);
-        boolean id = getFieldId(methodElement);
+        String queryName = methodElement.getSimpleName().toString();
+        String queryString = methodElement.getAnnotation(GenerateDataAccess.class).value();
 
-        if (!fieldNames.contains(fieldName)) {
-            fieldNames.add(fieldName);
-            fieldTypes.put(fieldName, fieldType);
-            fieldId.put(fieldName, id);
+        if (!queryNames.contains(queryName)) {
+            queryNames.add(queryName);
+            queryStrings.put(queryName, queryString);
 
             processingEnv.getMessager().printMessage(
                 Diagnostic.Kind.NOTE,
-                "  found field: " + fieldName + " // type: " + fieldType, methodElement);
+                "  found query method: " + queryName + " // query: " + queryString, methodElement);
         }
     }
 
     /**
-     * Obtains the field name deriving it from the method name.
-     *
-     * @param methodElement element describing the method
-     *
-     * @return the field name or a blank string if the field name could not be determined
+     * Generates the Data Access class using Apache Velocity templates.
      */
-    private String getFieldName(ExecutableElement methodElement) {
+    private void generateDataAccessClass() {
 
-        final String get = "get";
-        final String set = "set";
-        final String is = "is";
-
-        String fieldName = "";
-        String methodName = methodElement.getSimpleName().toString();
-        if (methodName.startsWith(get)
-            || methodName.startsWith(set)) {
-            fieldName = methodName.substring(get.length()).toLowerCase();
-        } else if (methodName.startsWith(is)) {
-            fieldName = methodName.substring(is.length()).toLowerCase();
-        }
-        return fieldName;
-    }
-
-    /**
-     * Obtains the field type deriving it from the method return type
-     * or the type of the first parameter.
-     *
-     * @param methodElement element describing the method
-     *
-     * @return the field type or a blank string if the field type could not be determined
-     */
-    private String getFieldType(ExecutableElement methodElement) {
-
-        String fieldType = "";
-        // if getter, the field type is the return type
-        // if not, look for first parameter
-        if (methodElement.getReturnType().equals(void.class)
-            && !methodElement.getParameters().isEmpty()) {
-            fieldType = methodElement.getParameters().get(0).asType().toString();
-        } else {
-            fieldType = methodElement.getReturnType().toString();
-        }
-        return fieldType;
-    }
-
-    /**
-     * Obtains the field id flag depending on the presence of a GenerateEntity annotation
-     * with the id field explicitly set to true.
-     *
-     * @param methodElement element describing the method
-     *
-     * @return the field id flag
-     */
-    private boolean getFieldId(ExecutableElement methodElement) {
-
-        boolean id = false;
-        GenerateEntity annotation = methodElement.getAnnotation(GenerateEntity.class);
-        if (annotation != null) {
-            id = annotation.id();
-        }
-        return id;
-    }
-
-    /**
-     * Generates the Entity class using Apache Velocity templates.
-     */
-    private void generateEntityClass() {
-
-        if (entityName.isEmpty()) {
+        if (dataAccessName.isEmpty() || entityName.isEmpty()) {
             return;
         }
 
@@ -255,16 +211,16 @@ public class GenerateEntityProcessor
             VelocityContext vc = new VelocityContext();
 
             vc.put("packageName", packageName);
-            vc.put("entityName", entityName);
+            vc.put("dataAccessName", dataAccessName);
             vc.put("implName", implName);
-            vc.put("fieldNames", fieldNames);
-            vc.put("fieldTypes", fieldTypes);
-            vc.put("fieldId", fieldId);
+            vc.put("queryNames", queryNames);
+            vc.put("queryStrings", queryStrings);
+            vc.put("entityName", entityName);
 
             // adding DisplayTool from Velocity Tools library
             vc.put("display", new DisplayTool());
 
-            Template vt = ve.getTemplate("entity.vm");
+            Template vt = ve.getTemplate("dataaccess.vm");
 
             JavaFileObject jfo = processingEnv.getFiler().createSourceFile(qualifiedName);
 
@@ -307,11 +263,11 @@ public class GenerateEntityProcessor
     private void cleanData() {
 
         packageName = "";
-        entityName = "";
+        dataAccessName = "";
         implName = "";
         qualifiedName = "";
-        fieldNames.clear();
-        fieldTypes.clear();
-        fieldId.clear();
+        queryNames.clear();
+        queryStrings.clear();
+        entityName = "";
     }
 }

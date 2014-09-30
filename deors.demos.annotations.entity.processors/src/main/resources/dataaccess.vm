@@ -1,0 +1,38 @@
+package $packageName;
+
+public class $implName implements $dataAccessName {
+
+    public ${entityName} getById(
+        ${entityName} id) {
+        // TO-DO: add missing implementation
+        return null;
+    }
+
+    public ${entityName} insert(
+        ${entityName} newRecord) {
+        // TO-DO: add missing implementation
+        return null;
+    }
+
+    public ${entityName} update(
+        ${entityName} updateRecord) {
+        // TO-DO: add missing implementation
+        return null;
+    }
+
+    public void delete(
+        ${entityName} deleteRecord) {
+        // TO-DO: add missing implementation
+        return;
+    }
+#foreach($query in $queryNames)
+
+    // TO-DO: method name and parameters should be obtained from the annotated type
+    public java.util.List<${entityName}> getByCustomCriteria(
+        String criteria1, String criteria2) {
+        // TO-DO: add logic needed to ask persistence engine for query results
+        // ${queryStrings.get($query)}
+        return null;
+    }
+#end
+}
