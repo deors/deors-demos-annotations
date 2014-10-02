@@ -17,40 +17,40 @@ public interface Article {
      * @return the property value
      */
     @GenerateEntity(id = true)
-    public String getId();
+    String getId();
 
     /**
      * Setter for id property.
      *
      * @param id the new property value
      */
-    public void setId(String id);
+    void setId(String id);
 
     /**
      * Getter for department property.
      *
      * @return the property value
      */
-    public int getDepartment();
+    int getDepartment();
 
     /**
      * Setter for department property.
      *
      * @param department the new property value
      */
-    public void setDepartment(int department);
+    void setDepartment(int department);
 
     /**
      * Getter for status property.
      *
      * @return the property value
      */
-    public String getStatus();
+    String getStatus();
 
     /**
      * Setter for status property.
      *
      * @param status the new property value
      */
-    public void setStatus(String status);
+    void setStatus(String status);
 }
