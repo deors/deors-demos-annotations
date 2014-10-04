@@ -20,7 +20,7 @@ public interface ArticleDataAccess
      *
      * @param criteria1 the first search criteria
      * @param criteria2 the second search criteria
-     * @return
+     * @return the list of beans corresponding to the given criteria
      */
     @GenerateDataAccess("select custom query clauses")
     List<Article> getByCustomCriteria(String criteria1, String criteria2);
