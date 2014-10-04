@@ -4,6 +4,9 @@ package deors.demos.annotations.entity;
  * A generic base data access interface, parameterizing the type
  * of the entity and the type of the key.
  *
+ * @param <T> the type of the entity bean
+ * @param <K> the type of the primary key
+ *
  * @author deors
  * @version 1.0
  */
