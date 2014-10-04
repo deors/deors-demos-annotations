@@ -245,24 +245,11 @@ public class GenerateEntityProcessor
         }
 
         try {
-            Properties props = new Properties();
-            URL url = this.getClass().getClassLoader().getResource("velocity.properties");
-            props.load(url.openStream());
+            VelocityEngine ve = initVelocityEngine();
 
-            VelocityEngine ve = new VelocityEngine(props);
-            ve.init();
+            VelocityContext vc = initVelocityContext();
 
-            VelocityContext vc = new VelocityContext();
-
-            vc.put("packageName", packageName);
-            vc.put("entityName", entityName);
-            vc.put("implName", implName);
-            vc.put("fieldNames", fieldNames);
-            vc.put("fieldTypes", fieldTypes);
-            vc.put("fieldId", fieldId);
-
-            // adding DisplayTool from Velocity Tools library
-            vc.put("display", new DisplayTool());
+            populateModel(vc);
 
             Template vt = ve.getTemplate("entity.vm");
 
@@ -299,6 +286,54 @@ public class GenerateEntityProcessor
                 Diagnostic.Kind.ERROR,
                 e.getLocalizedMessage());
         }
+    }
+
+    /**
+     * Initializes and return the Velocity engine.
+     *
+     * @return the initialized Velocity engine
+     * @throws IOException an I/O exception reading the Velocity properties file
+     * @throws Exception an exception while initializing the Velocity engine
+     */
+    private VelocityEngine initVelocityEngine() throws IOException, Exception {
+
+        Properties props = new Properties();
+        URL url = this.getClass().getClassLoader().getResource("velocity.properties");
+        props.load(url.openStream());
+
+        VelocityEngine ve = new VelocityEngine(props);
+        ve.init();
+        return ve;
+    }
+
+    /**
+     * Initializes and return the Velocity context.
+     *
+     * @return the initialized Velocity context
+     */
+    private VelocityContext initVelocityContext() {
+
+        VelocityContext vc = new VelocityContext();
+
+        // adding DisplayTool from Velocity Tools library
+        vc.put("display", new DisplayTool());
+        return vc;
+    }
+
+    /**
+     * Populates the Velocity context with the model data.
+     *
+     * @param vc the Velocity context
+     */
+    private void populateModel(VelocityContext vc) {
+
+        vc.put("packageName", packageName);
+        vc.put("entityName", entityName);
+        vc.put("implName", implName);
+        vc.put("qualifiedName", qualifiedName);
+        vc.put("fieldNames", fieldNames);
+        vc.put("fieldTypes", fieldTypes);
+        vc.put("fieldId", fieldId);
     }
 
     /**

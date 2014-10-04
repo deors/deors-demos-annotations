@@ -164,25 +164,34 @@ public class GenerateDataAccessProcessor
             return;
         }
 
-        for (TypeMirror iface : superInterfaces) {
-            Scanner s = new Scanner(iface.toString());
-            s.useDelimiter("<|,|>");
-            if (s.hasNext()) {
-                // ignoring interface name
-                s.next();
-            }
-            if (s.hasNext()) {
-                // entity name is the first parameterized type
-                entityType = s.next();
-                entityName = entityType.substring(entityType.lastIndexOf('.') + 1);
-            }
-            if (s.hasNext()) {
-                // key type is the second parameterized type
-                keyType = s.next();
-                keyName = keyType.substring(keyType.lastIndexOf('.') + 1);
-            }
-            s.close();
+        setEntityAndKeyTypeInfo(superInterfaces.get(0));
+    }
+
+    /**
+     * Sets the entity and primary key types information by parsing the given
+     * interface full name.
+     *
+     * @param iface the interface type to be parsed
+     */
+    private void setEntityAndKeyTypeInfo(TypeMirror iface) {
+
+        Scanner s = new Scanner(iface.toString());
+        s.useDelimiter("<|,|>");
+        if (s.hasNext()) {
+            // ignoring interface name
+            s.next();
         }
+        if (s.hasNext()) {
+            // entity name is the first parameterized type
+            entityType = s.next();
+            entityName = entityType.substring(entityType.lastIndexOf('.') + 1);
+        }
+        if (s.hasNext()) {
+            // key type is the second parameterized type
+            keyType = s.next();
+            keyName = keyType.substring(keyType.lastIndexOf('.') + 1);
+        }
+        s.close();
     }
 
     /**
@@ -216,27 +225,11 @@ public class GenerateDataAccessProcessor
         }
 
         try {
-            Properties props = new Properties();
-            URL url = this.getClass().getClassLoader().getResource("velocity.properties");
-            props.load(url.openStream());
+            VelocityEngine ve = initVelocityEngine();
 
-            VelocityEngine ve = new VelocityEngine(props);
-            ve.init();
+            VelocityContext vc = initVelocityContext();
 
-            VelocityContext vc = new VelocityContext();
-
-            vc.put("packageName", packageName);
-            vc.put("dataAccessName", dataAccessName);
-            vc.put("implName", implName);
-            vc.put("queryNames", queryNames);
-            vc.put("queryStrings", queryStrings);
-            vc.put("entityType", entityType);
-            vc.put("entityName", entityName);
-            vc.put("keyType", keyType);
-            vc.put("keyName", keyName);
-
-            // adding DisplayTool from Velocity Tools library
-            vc.put("display", new DisplayTool());
+            populateModel(vc);
 
             Template vt = ve.getTemplate("dataaccess.vm");
 
@@ -276,6 +269,57 @@ public class GenerateDataAccessProcessor
     }
 
     /**
+     * Initializes and return the Velocity engine.
+     *
+     * @return the initialized Velocity engine
+     * @throws IOException an I/O exception reading the Velocity properties file
+     * @throws Exception an exception while initializing the Velocity engine
+     */
+    private VelocityEngine initVelocityEngine() throws IOException, Exception {
+
+        Properties props = new Properties();
+        URL url = this.getClass().getClassLoader().getResource("velocity.properties");
+        props.load(url.openStream());
+
+        VelocityEngine ve = new VelocityEngine(props);
+        ve.init();
+        return ve;
+    }
+
+    /**
+     * Initializes and return the Velocity context.
+     *
+     * @return the initialized Velocity context
+     */
+    private VelocityContext initVelocityContext() {
+
+        VelocityContext vc = new VelocityContext();
+
+        // adding DisplayTool from Velocity Tools library
+        vc.put("display", new DisplayTool());
+        return vc;
+    }
+
+    /**
+     * Populates the Velocity context with the model data.
+     *
+     * @param vc the Velocity context
+     */
+    private void populateModel(VelocityContext vc) {
+
+        vc.put("packageName", packageName);
+        vc.put("dataAccessName", dataAccessName);
+        vc.put("implName", implName);
+        vc.put("qualifiedName", qualifiedName);
+        vc.put("queryNames", queryNames);
+        vc.put("queryStrings", queryStrings);
+        vc.put("entityType", entityType);
+        vc.put("entityName", entityName);
+        vc.put("keyType", keyType);
+        vc.put("keyName", keyName);
+    }
+
+    /**
      * Cleans data in preparation of an eventual new annotated interface.
      */
     private void cleanData() {
@@ -287,5 +331,8 @@ public class GenerateDataAccessProcessor
         queryNames.clear();
         queryStrings.clear();
         entityType = "";
+        entityName = "";
+        keyType = "";
+        keyName = "";
     }
 }
