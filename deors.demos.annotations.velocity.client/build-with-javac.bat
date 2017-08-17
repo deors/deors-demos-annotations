@@ -1,6 +1,6 @@
 @echo off
-set BASE_ROOT=c:\code\deors.demos\annotations-jdk9\deors.demos.annotations.velocity
-set PROC_ROOT=c:\code\deors.demos\annotations-jdk9\deors.demos.annotations.velocity.processors
+set BASE_ROOT=..\deors.demos.annotations.velocity
+set PROC_ROOT=..\deors.demos.annotations.velocity.processors
 set OPT=-XprintProcessorInfo -XprintRounds
 set CP=%BASE_ROOT%\target\deors.demos.annotations.velocity-1.0-SNAPSHOT.jar
 rem set CP=%CP%;%HOME%\.m2\repository\javax\persistence\persistence-api\1.0\persistence-api-1.0.jar

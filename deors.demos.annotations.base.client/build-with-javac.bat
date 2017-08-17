@@ -1,6 +1,6 @@
 @echo off
-set BASE_ROOT=c:\code\deors.demos\annotations-jdk9\deors.demos.annotations.base
-set PROC_ROOT=c:\code\deors.demos\annotations-jdk9\deors.demos.annotations.base.processors
+set BASE_ROOT=..\deors.demos.annotations.base
+set PROC_ROOT=..\deors.demos.annotations.base.processors
 set OPT=-XprintProcessorInfo -XprintRounds
 set CP=%BASE_ROOT%\target\deors.demos.annotations.base-1.0-SNAPSHOT.jar
 set PRP=%CP%;%PROC_ROOT%\target\deors.demos.annotations.base.processors-1.0-SNAPSHOT.jar
