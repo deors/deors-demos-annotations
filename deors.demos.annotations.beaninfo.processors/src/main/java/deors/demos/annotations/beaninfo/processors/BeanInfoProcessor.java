@@ -29,7 +29,7 @@ import deors.demos.annotations.beaninfo.BeanInfo;
  * @version 1.0
  */
 @SupportedAnnotationTypes("deors.demos.annotations.beaninfo.BeanInfo")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_9)
 public class BeanInfoProcessor
     extends AbstractProcessor {
 

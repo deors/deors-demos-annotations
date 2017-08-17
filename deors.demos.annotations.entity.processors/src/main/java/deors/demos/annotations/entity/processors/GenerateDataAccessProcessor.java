@@ -43,7 +43,7 @@ import deors.demos.annotations.entity.GenerateDataAccess;
  * @version 1.0
  */
 @SupportedAnnotationTypes("deors.demos.annotations.entity.GenerateDataAccess")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_9)
 public class GenerateDataAccessProcessor
     extends AbstractProcessor {
 

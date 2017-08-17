@@ -20,7 +20,7 @@ import deors.demos.annotations.base.Complexity;
  * @version 1.0
  */
 @SupportedAnnotationTypes("deors.demos.annotations.base.Complexity")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_9)
 public class ComplexityProcessor
     extends AbstractProcessor {
 
