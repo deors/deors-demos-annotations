@@ -3,6 +3,7 @@ package deors.demos.annotations.beaninfo.processors;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -118,7 +119,12 @@ public class BeanInfoProcessor
         bw.append(";");
         bw.newLine();
         bw.newLine();
-
+        bw.append("import javax.annotation.processing.Generated;");
+        bw.newLine();
+        bw.newLine();
+        bw.append("@Generated(value=\"" + this.getClass().getName() + "\" , date = \"" + LocalDateTime.now() + 
+        		"\", comments = \"Test generator\")");
+        bw.newLine();
         bw.append("public class ");
         bw.append(classElement.getSimpleName());
         bw.append("BeanInfo extends java.beans.SimpleBeanInfo {");
