@@ -5,25 +5,27 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>deors.demos.annotations</name>
     <groupId>deors.demos</groupId>
-    <artifactId>deors.demos.annotations</artifactId>
+    <artifactId>deors-demos-annotations</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <name>deors-demos-annotations</name>
+    <description>demo project on the usage of annotation processors to generate source code at compile time</description>
+
     <modules>
-        <module>deors.demos.annotations.base</module>
-        <module>deors.demos.annotations.base.processors</module>
-        <module>deors.demos.annotations.base.client</module>
-        <module>deors.demos.annotations.beaninfo</module>
-        <module>deors.demos.annotations.beaninfo.processors</module>
-        <module>deors.demos.annotations.beaninfo.client</module>
-        <module>deors.demos.annotations.entity</module>
-        <module>deors.demos.annotations.entity.processors</module>
-        <module>deors.demos.annotations.entity.client</module>
-        <module>deors.demos.annotations.velocity</module>
-        <module>deors.demos.annotations.velocity.processors</module>
-        <module>deors.demos.annotations.velocity.client</module>
+        <module>deors-demos-annotations-base</module>
+        <module>deors-demos-annotations-base-processors</module>
+        <module>deors-demos-annotations-base-client</module>
+        <module>deors-demos-annotations-beaninfo</module>
+        <module>deors-demos-annotations-beaninfo-processors</module>
+        <module>deors-demos-annotations-beaninfo-client</module>
+        <module>deors-demos-annotations-entity</module>
+        <module>deors-demos-annotations-entity-processors</module>
+        <module>deors-demos-annotations-entity-client</module>
+        <module>deors-demos-annotations-velocity</module>
+        <module>deors-demos-annotations-velocity-processors</module>
+        <module>deors-demos-annotations-velocity-client</module>
     </modules>
 
 </project>
