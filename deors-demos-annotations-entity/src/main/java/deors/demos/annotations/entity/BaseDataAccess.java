@@ -24,7 +24,7 @@ public interface BaseDataAccess<T, K> {
      * Inserts a new bean in the data store.
      *
      * @param newRecord the bean to be inserted in the data store
-     * @return the bean including any enhancement or persistencia information (if any)
+     * @return the bean including any enhancement or persistence information (if any)
      */
     T insert(T newRecord);
 
