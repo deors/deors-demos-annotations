@@ -122,8 +122,8 @@ public class BeanInfoProcessor
         bw.append("import javax.annotation.processing.Generated;");
         bw.newLine();
         bw.newLine();
-        bw.append("@Generated(value=\"" + this.getClass().getName() + "\" , date = \"" + LocalDateTime.now() + 
-        		"\", comments = \"Test generator\")");
+        bw.append("@Generated(value=\"" + this.getClass().getName() + "\" , date = \"" + LocalDateTime.now()
+            + "\", comments = \"Test generator\")");
         bw.newLine();
         bw.append("public class ");
         bw.append(classElement.getSimpleName());
