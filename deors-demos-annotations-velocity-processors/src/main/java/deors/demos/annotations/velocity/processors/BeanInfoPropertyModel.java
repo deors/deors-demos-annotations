@@ -9,22 +9,22 @@ package deors.demos.annotations.velocity.processors;
 public class BeanInfoPropertyModel {
 
     /** Property name. */
-    String name;
+    private String name;
 
     /** Property qualified type. */
-    String qualifiedType;
+    private String qualifiedType;
 
     /** Property description. */
-    String description;
+    private String description;
 
     /** Whether the property is an expert feature. */
-    boolean expert;
+    private boolean expert;
 
     /** Whether the property should be hidden in menus of visual editors. */
-    boolean hidden;
+    private boolean hidden;
 
     /** Whether the property should be prioritized in menus of visual editors. */
-    boolean preferred;
+    private boolean preferred;
 
     /**
      * Default constructor.
@@ -85,5 +85,59 @@ public class BeanInfoPropertyModel {
      */
     public boolean isPreferred() {
         return preferred;
+    }
+
+    /**
+     * Setter for name property.
+     *
+     * @param name the name to set
+     */
+    void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Setter for qualifiedType property.
+     *
+     * @param qualifiedType the qualifiedType to set
+     */
+    void setQualifiedType(String qualifiedType) {
+        this.qualifiedType = qualifiedType;
+    }
+
+    /**
+     * Setter for description property.
+     *
+     * @param description the description to set
+     */
+    void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Setter for expert property.
+     *
+     * @param expert the expert to set
+     */
+    void setExpert(boolean expert) {
+        this.expert = expert;
+    }
+
+    /**
+     * Setter for hidden property.
+     *
+     * @param hidden the hidden to set
+     */
+    void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    /**
+     * Setter for preferred property.
+     *
+     * @param preferred the preferred to set
+     */
+    void setPreferred(boolean preferred) {
+        this.preferred = preferred;
     }
 }

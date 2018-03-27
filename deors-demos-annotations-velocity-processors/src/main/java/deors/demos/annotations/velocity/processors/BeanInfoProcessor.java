@@ -87,16 +87,16 @@ public class BeanInfoProcessor
                     PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
                     BeanInfo annotation = classElement.getAnnotation(BeanInfo.class);
 
-                    model.packageName = packageElement.getQualifiedName().toString();
-                    model.className = classElement.getSimpleName().toString();
-                    model.qualifiedName = classElement.getQualifiedName().toString();
-                    model.beanInfoClassName = model.className + BEAN_INFO;
-                    model.beanInfoQualifiedName = model.qualifiedName + BEAN_INFO;
-                    model.description = annotation.description();
+                    model.setPackageName(packageElement.getQualifiedName().toString());
+                    model.setClassName(classElement.getSimpleName().toString());
+                    model.setQualifiedName(classElement.getQualifiedName().toString());
+                    model.setBeanInfoClassName(model.getClassName() + BEAN_INFO);
+                    model.setBeanInfoQualifiedName(model.getQualifiedName() + BEAN_INFO);
+                    model.setDescription(annotation.description());
 
                     processingEnv.getMessager().printMessage(
                         Diagnostic.Kind.NOTE,
-                        "annotated class: " + model.qualifiedName, e);
+                        "annotated class: " + model.getQualifiedName(), e);
 
                 } else if (e.getKind() == ElementKind.FIELD) {
 
@@ -105,18 +105,18 @@ public class BeanInfoProcessor
                     BeanInfoPropertyModel property = new BeanInfoPropertyModel();
                     BeanInfo annotation = varElement.getAnnotation(BeanInfo.class);
 
-                    property.name = varElement.getSimpleName().toString();
-                    property.qualifiedType = varElement.asType().toString();
-                    property.description = annotation.description();
-                    property.expert = annotation.expert();
-                    property.hidden = annotation.hidden();
-                    property.preferred = annotation.preferred();
+                    property.setName(varElement.getSimpleName().toString());
+                    property.setQualifiedType(varElement.asType().toString());
+                    property.setDescription(annotation.description());
+                    property.setExpert(annotation.expert());
+                    property.setHidden(annotation.hidden());
+                    property.setPreferred(annotation.preferred());
 
-                    properties.put(property.name, property);
+                    properties.put(property.getName(), property);
 
                     processingEnv.getMessager().printMessage(
                         Diagnostic.Kind.NOTE,
-                        "annotated field: " + property.name + " // field type: " + property.qualifiedType, e);
+                        "annotated field: " + property.getName() + " // field type: " + property.getQualifiedType(), e);
 
                 } else if (e.getKind() == ElementKind.METHOD) {
 
@@ -127,37 +127,37 @@ public class BeanInfoProcessor
                     BeanInfoMethodModel method = new BeanInfoMethodModel();
                     List<BeanInfoPropertyModel> parameters = new ArrayList<>();
 
-                    method.name = exeElement.getSimpleName().toString();
-                    method.qualifiedType = exeElement.getReturnType().toString();
-                    method.description = annotation.description();
-                    method.expert = annotation.expert();
-                    method.hidden = annotation.hidden();
-                    method.preferred = annotation.preferred();
-                    method.parameters = parameters;
+                    method.setName(exeElement.getSimpleName().toString());
+                    method.setQualifiedType(exeElement.getReturnType().toString());
+                    method.setDescription(annotation.description());
+                    method.setExpert(annotation.expert());
+                    method.setHidden(annotation.hidden());
+                    method.setPreferred(annotation.preferred());
+                    method.setParameters(parameters);
 
                     for (VariableElement paramElement : paramElements) {
                         BeanInfoPropertyModel parameter = new BeanInfoPropertyModel();
                         BeanInfo paramAnnotation = paramElement.getAnnotation(BeanInfo.class);
 
-                        parameter.name = paramElement.getSimpleName().toString();
-                        parameter.qualifiedType = paramElement.asType().toString();
-                        parameter.description = paramAnnotation.description();
-                        parameter.expert = paramAnnotation.expert();
-                        parameter.hidden = paramAnnotation.hidden();
-                        parameter.preferred = paramAnnotation.preferred();
+                        parameter.setName(paramElement.getSimpleName().toString());
+                        parameter.setQualifiedType(paramElement.asType().toString());
+                        parameter.setDescription(paramAnnotation.description());
+                        parameter.setExpert(paramAnnotation.expert());
+                        parameter.setHidden(paramAnnotation.hidden());
+                        parameter.setPreferred(paramAnnotation.preferred());
 
                         parameters.add(parameter);
                     }
 
-                    methods.put(method.name, method);
+                    methods.put(method.getName(), method);
 
                     processingEnv.getMessager().printMessage(
                         Diagnostic.Kind.NOTE,
-                        "annotated method: " + method.name + " // return type: " + method.qualifiedType, e);
+                        "annotated method: " + method.getName() + " // return type: " + method.getQualifiedType(), e);
                     for (BeanInfoPropertyModel parameter : parameters) {
                         processingEnv.getMessager().printMessage(
                             Diagnostic.Kind.NOTE,
-                            "parameter: " + parameter.name + " // parameter type: " + parameter.qualifiedType, e);
+                            "parameter: " + parameter.getName() + " // parameter type: " + parameter.getQualifiedType(), e);
                     }
                 }
             }
@@ -183,7 +183,7 @@ public class BeanInfoProcessor
                 Template vt = ve.getTemplate("beaninfo.vm");
 
                 JavaFileObject jfo = processingEnv.getFiler().createSourceFile(
-                    model.beanInfoQualifiedName);
+                    model.getBeanInfoQualifiedName());
 
                 processingEnv.getMessager().printMessage(
                     Diagnostic.Kind.NOTE,
