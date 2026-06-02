@@ -12,8 +12,11 @@ import org.junit.Test;
 
 public class ArticleBeanInfoTest {
 
+    private static final int EXPECTED_PROPERTY_COUNT = 3;
+    private static final int EXPECTED_METHOD_COUNT = 6;
+
     @Test
-    public void generatedBeanInfoShouldBeValidAndExecutable() throws Exception {
+    public void testGeneratedBeanInfoIsValidAndExecutable() throws ReflectiveOperationException {
 
         ArticleBeanInfo beanInfo = new ArticleBeanInfo();
 
@@ -23,11 +26,11 @@ public class ArticleBeanInfoTest {
 
         PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
         assertNotNull(properties);
-        assertEquals(3, properties.length);
+        assertEquals(EXPECTED_PROPERTY_COUNT, properties.length);
 
         MethodDescriptor[] methods = beanInfo.getMethodDescriptors();
         assertNotNull(methods);
-        assertEquals(6, methods.length);
+        assertEquals(EXPECTED_METHOD_COUNT, methods.length);
 
         MethodDescriptor invalidate = beanInfo.getInvalidateMethodDescriptor();
         assertNotNull(invalidate);
