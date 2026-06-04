@@ -31,10 +31,11 @@
                     <compilerVersion>${java.version}</compilerVersion>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <compilerArguments>
-                        <XprintProcessorInfo/>
-                        <XprintRounds/>
-                    </compilerArguments>
+                    <proc>full</proc>
+                    <compilerArgs>
+                        <arg>-XprintProcessorInfo</arg>
+                        <arg>-XprintRounds</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>

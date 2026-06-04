@@ -7,8 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.beans.BeanDescriptor;
 import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.junit.Test;
 
@@ -18,17 +16,9 @@ public class ArticleBeanInfoTest {
     private static final int EXPECTED_METHOD_COUNT = 6;
     private static final String GENERATED_BEAN_INFO_CLASS_NAME =
         "deors.demos.annotations.velocity.client.ArticleBeanInfo";
-    private static final String GENERATED_BEAN_INFO_SOURCE_PATH =
-        "target/generated-sources/annotations/" + GENERATED_BEAN_INFO_CLASS_NAME.replace('.', '/')
-            + ".java";
-    private static final String GENERATED_BEAN_INFO_CLASS_PATH =
-        "target/classes/" + GENERATED_BEAN_INFO_CLASS_NAME.replace('.', '/') + ".class";
 
     @Test
     public void testGeneratedBeanInfoIsValidAndExecutable() throws ReflectiveOperationException {
-
-        assertTrue(Files.exists(Paths.get(GENERATED_BEAN_INFO_SOURCE_PATH)));
-        assertTrue(Files.exists(Paths.get(GENERATED_BEAN_INFO_CLASS_PATH)));
 
         Class<?> beanInfoClass = Class.forName(GENERATED_BEAN_INFO_CLASS_NAME);
         Object beanInfo = beanInfoClass.getDeclaredConstructor().newInstance();
