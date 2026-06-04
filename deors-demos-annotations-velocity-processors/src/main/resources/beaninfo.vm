@@ -57,7 +57,7 @@ public class ${model.beanInfoClassName} extends java.beans.SimpleBeanInfo {
 
         return new PropertyDescriptor[] {
 #foreach($property in $properties)
-            get${display.capitalize(${property.name})}PropertyDescriptor()#if(${velocityHasNext}),#end
+            get${display.capitalize(${property.name})}PropertyDescriptor()#if($foreach.hasNext),#end
 
 #end
         };
@@ -72,7 +72,7 @@ public class ${model.beanInfoClassName} extends java.beans.SimpleBeanInfo {
 
         return new MethodDescriptor[] {
 #foreach($method in $methods)
-            get${display.capitalize(${method.name})}MethodDescriptor()#if(${velocityHasNext}),#end
+            get${display.capitalize(${method.name})}MethodDescriptor()#if($foreach.hasNext),#end
 
 #end
         };
@@ -116,31 +116,31 @@ public class ${model.beanInfoClassName} extends java.beans.SimpleBeanInfo {
 
         try {
             // finds the method using getMethod with parameter types
-            Class<?>[] parameterTypes = {#foreach($param in $method.parameters)${param.qualifiedType}.class#if(${velocityHasNext}), #end#end};
+            Class<?>[] parameterTypes = {#foreach($param in $method.parameters)${param.qualifiedType}.class#if($foreach.hasNext), #end#end};
             Method method = getBeanClass().getMethod("${method.name}", parameterTypes);
 
             // creates the method parameter descriptors
 #foreach($param in $method.parameters)
-            ParameterDescriptor parameterDescriptor${velocityCount} = new ParameterDescriptor();
-            parameterDescriptor${velocityCount}.setName("${param.name}");
-            parameterDescriptor${velocityCount}.setDisplayName("${param.name}");
-            parameterDescriptor${velocityCount}.setShortDescription("${param.description}");
-            parameterDescriptor${velocityCount}.setExpert(${param.expert});
-            parameterDescriptor${velocityCount}.setHidden(${param.hidden});
-            parameterDescriptor${velocityCount}.setPreferred(${param.preferred});
+            ParameterDescriptor parameterDescriptor${foreach.count} = new ParameterDescriptor();
+            parameterDescriptor${foreach.count}.setName("${param.name}");
+            parameterDescriptor${foreach.count}.setDisplayName("${param.name}");
+            parameterDescriptor${foreach.count}.setShortDescription("${param.description}");
+            parameterDescriptor${foreach.count}.setExpert(${param.expert});
+            parameterDescriptor${foreach.count}.setHidden(${param.hidden});
+            parameterDescriptor${foreach.count}.setPreferred(${param.preferred});
 #end
 
             ParameterDescriptor[] parameterDescriptors = {
 #foreach($param in $method.parameters)
-                parameterDescriptor${velocityCount}#if(${velocityHasNext}),#end
+                parameterDescriptor${foreach.count}#if($foreach.hasNext),#end
 
 #end
             };
 
             MethodDescriptor descriptor = new MethodDescriptor(method, parameterDescriptors);
 
-            descriptor.setName("${method.name}(#foreach($param in $method.parameters)${param.qualifiedType}#if(${velocityHasNext}), #end#end)");
-            descriptor.setDisplayName("${method.name}(#foreach($param in $method.parameters)${param.qualifiedType}#if(${velocityHasNext}), #end#end)");
+            descriptor.setName("${method.name}(#foreach($param in $method.parameters)${param.qualifiedType}#if($foreach.hasNext), #end#end)");
+            descriptor.setDisplayName("${method.name}(#foreach($param in $method.parameters)${param.qualifiedType}#if($foreach.hasNext), #end#end)");
             descriptor.setShortDescription("${method.description}");
             descriptor.setExpert(${method.expert});
             descriptor.setHidden(${method.hidden});
