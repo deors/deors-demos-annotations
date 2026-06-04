@@ -1,9 +1,10 @@
 package deors.demos.annotations.beaninfo.client;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.beans.PropertyDescriptor;
+import java.beans.SimpleBeanInfo;
 
 import org.junit.Test;
 
@@ -19,23 +20,27 @@ public class ArticleBeanInfoTest {
         Class<?> beanInfoClass = Class.forName(GENERATED_BEAN_INFO_CLASS_NAME);
         Object beanInfo = beanInfoClass.getDeclaredConstructor().newInstance();
 
-        PropertyDescriptor idDescriptor = invokeDescriptorMethod(
+        assertTrue(SimpleBeanInfo.class.isAssignableFrom(beanInfoClass));
+        assertEquals(PropertyDescriptor.class,
+            beanInfoClass.getMethod("idPropertyDescriptor").getReturnType());
+        assertEquals(PropertyDescriptor.class,
+            beanInfoClass.getMethod("departmentPropertyDescriptor").getReturnType());
+        assertEquals(PropertyDescriptor.class,
+            beanInfoClass.getMethod("statusPropertyDescriptor").getReturnType());
+
+        invokeDescriptorMethod(
             beanInfoClass, beanInfo, "idPropertyDescriptor");
-        PropertyDescriptor departmentDescriptor = invokeDescriptorMethod(
+        invokeDescriptorMethod(
             beanInfoClass, beanInfo, "departmentPropertyDescriptor");
-        PropertyDescriptor statusDescriptor = invokeDescriptorMethod(
+        invokeDescriptorMethod(
             beanInfoClass, beanInfo, "statusPropertyDescriptor");
 
-        assertNull(idDescriptor);
-        assertNull(departmentDescriptor);
-        assertNull(statusDescriptor);
         assertEquals(EXPECTED_GENERATED_METHOD_COUNT, beanInfoClass.getDeclaredMethods().length);
     }
 
-    private PropertyDescriptor invokeDescriptorMethod(Class<?> beanInfoClass, Object beanInfo,
+    private void invokeDescriptorMethod(Class<?> beanInfoClass, Object beanInfo,
         String methodName) throws ReflectiveOperationException {
 
-        Object value = beanInfoClass.getMethod(methodName).invoke(beanInfo);
-        return PropertyDescriptor.class.cast(value);
+        beanInfoClass.getMethod(methodName).invoke(beanInfo);
     }
 }
